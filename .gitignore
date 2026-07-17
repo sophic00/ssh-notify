@@ -32,3 +32,11 @@ go.work.sum
 # .idea/
 # .vscode/
 
+# Binaries
+ssh-notify-bot
+
+# Database files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
