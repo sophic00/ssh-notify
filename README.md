@@ -8,10 +8,12 @@ The system is split into two components:
 1. **Central Daemon:** A single Go application running on a central server. It runs the Telegram bot listener (using `github.com/go-telegram/bot`) and exposes an authenticated HTTP endpoint (`POST /ssh-login`). Data is persisted in a local SQLite database.
 2. **Client Hook:** A lightweight, dependency-free shell script running on monitored hosts. When an SSH session opens, Linux Pluggable Authentication Modules (PAM) invokes the script. The script makes a fast HTTP POST to the central daemon to report the login details.
 
-```
-[Monitored Host A] ---\ (POST /ssh-login + Token A)
-                       ---> [Central Daemon] ---> [Telegram API] ---> [Owner Alert]
-[Monitored Host B] ---/ (POST /ssh-login + Token B)
+```mermaid
+graph TD
+    ClientA[Monitored Host A] -->|POST /ssh-login + Token A| BotServer[Central Daemon]
+    ClientB[Monitored Host B] -->|POST /ssh-login + Token B| BotServer
+    BotServer -->|Telegram API| Telegram[Telegram API]
+    Telegram -->|Owner Alert| Owner[Owner Chat]
 ```
 
 ### Key Advantages of Centralized Monitoring
